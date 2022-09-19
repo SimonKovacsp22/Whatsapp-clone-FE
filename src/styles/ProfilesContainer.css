@@ -1,7 +1,100 @@
 /** @format */
-
+.profile-container {
+  overflow: hidden;
+}
 .profile-nav-bar {
   width: 100%;
   height: 60px;
   background-color: #202c33;
+  border-radius: 3px 0px 0px 3px;
+}
+.own-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  margin-left: 15px;
+}
+.online-status {
+  position: relative;
+}
+.own-profile-action i {
+  font-size: 18px;
+}
+.own-profile-action :last-child {
+  margin-top: -3px;
+}
+.circle {
+  border: 2px dashed white;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: relative;
+  justify-content: space-between;
+}
+.online-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: rgb(6, 189, 101);
+  border-radius: 50%;
+  top: 0px;
+  right: 0px;
+}
+.profile-search-bar {
+  position: relative;
+}
+.profile-search-bar i:first-child {
+  font-size: 15px;
+  position: absolute;
+  color: #e6eaed;
+  margin-left: 16px;
+}
+.profile-search-bar i:last-child {
+  font-size: 18px;
+}
+.profile-search-bar input {
+  width: 93%;
+  border-radius: 4px;
+  outline: none;
+  border: transparent;
+  padding: 3px 4px 4px 55px;
+  background-color: #202c33;
+  color: aliceblue;
+}
+.single-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  margin-left: 15px;
+}
+
+div.profiles-container {
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+div.profiles-container::-webkit-scrollbar {
+  width: 6px; /* width of the entire scrollbar */
+}
+div.profiles-container::-webkit-scrollbar-track {
+  background: #000000; /* color of the tracking area */
+}
+div.profiles-container::-webkit-scrollbar-thumb {
+  background-color: rgb(87, 87, 87); /* color of the scroll thumb */
+  border: 3px solid rgb(55, 55, 55); /* creates padding around scroll thumb */
+}
+
+.profile-container-show {
+  width: 100%;
+  height: 100%;
+  background-color: aqua;
+}
+
+.own-profile-action-nav {
+  width: 100%;
+  height: 100px;
+  background-color: #202c33;
+  align-items: flex-end;
 }
