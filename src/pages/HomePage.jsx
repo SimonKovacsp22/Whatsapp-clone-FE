@@ -11,11 +11,11 @@ const HomePage = () => {
 
   const getData = async () => {
     try {
-      let resp = await fetch(process.env.REACT_APP_BE_URL)
+      let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
       if (resp.ok) {
         let users = await resp.json()
-       console.log(users)
-         setProfileNames(users)
+        console.log(users)
+        setProfileNames(users)
       } else {
         console.log("error")
       }
