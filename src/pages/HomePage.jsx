@@ -11,11 +11,11 @@ const HomePage = () => {
 
   const getData = async () => {
     try {
-      let resp = await fetch("https://jsonplaceholder.typicode.com/users")
+      let resp = await fetch(process.env.REACT_APP_BE_URL)
       if (resp.ok) {
         let users = await resp.json()
-
-        setProfileNames(users)
+       console.log(users)
+         setProfileNames(users)
       } else {
         console.log("error")
       }

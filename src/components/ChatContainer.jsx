@@ -5,13 +5,17 @@ import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
+import {useSelector} from "react-redux"
 
 const ChatContainer = () => {
+
+  const selectedProfile = useSelector(state => state.profile.selectedProfile)
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
   const target = useRef(null)
   return (
     <>
+    
       <div
         className={
           !searchMessage
