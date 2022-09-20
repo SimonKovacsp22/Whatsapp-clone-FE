@@ -8,14 +8,37 @@ import ChatContainer from "../components/ChatContainer"
 const HomePage = () => {
   const [profileNames, setProfileNames] = useState([])
   const [chatSelected, setChatSelected] = useState(null)
+  const [chatItems, setChatItems] = useState([])
 
-  const getData = async () => {
+  const getUsers = async () => {
     try {
       let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
       if (resp.ok) {
         let users = await resp.json()
-        console.log(users)
+        //console.log(users)
         setProfileNames(users)
+      } else {
+        console.log("error")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getChats = async () => {
+    let headers = {
+      Authorization: `Bearer ${process.env.REACT_APP_USER_TOKEN}`,
+      "Content-type": "application/json",
+    }
+    try {
+      let resp = await fetch(process.env.REACT_APP_BE_URL + "/chat", {
+        method: "GET",
+        headers,
+      })
+      if (resp.ok) {
+        let chats = await resp.json()
+        console.log(chats)
+        setChatItems(chats)
       } else {
         console.log("error")
       }
@@ -26,7 +49,8 @@ const HomePage = () => {
   const changeChat = (user) => setChatSelected(user)
 
   useEffect(() => {
-    getData()
+    getUsers()
+    getChats()
     //console.log(profileNames)
   }, [])
   return (
@@ -35,6 +59,7 @@ const HomePage = () => {
         profileNames={profileNames}
         setChatSelect={setChatSelected}
         changeChat={changeChat}
+        chatItems={chatItems}
       />
       <ChatContainer profileSelected={setChatSelected} />
     </div>

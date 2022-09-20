@@ -2,11 +2,18 @@
 
 export const SET_SELECTED_PROFILE = "SET_SELECTED_PROFILE"
 export const USER_LOGGED_IN = "USER_LOGGED_IN"
+export const SET_SELECTED_CHAT = "SET_SELECTED_CHAT"
 
 export const setSelectedUserAction = (user) => {
   return {
     type: SET_SELECTED_PROFILE,
     payload: user,
+  }
+}
+export const setSelectedChatAction = (chat) => {
+  return {
+    type: SET_SELECTED_CHAT,
+    payload: chat,
   }
 }
 

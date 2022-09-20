@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage"
 import { persistStore, persistReducer } from "redux-persist"
 import { encryptTransform } from "redux-persist-transform-encrypt"
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import chatReducer from "../reducers/chatReducer"
 
 const persistConfig = {
   key: "root",
@@ -23,6 +24,7 @@ const persistConfig = {
 const combinedReducer = combineReducers({
   profile: profilesReducer,
   logUser: loginUserReducer,
+  chat: chatReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer)

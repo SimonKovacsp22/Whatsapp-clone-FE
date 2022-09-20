@@ -6,8 +6,14 @@ import SingleProfileContainer from "./SingleProfileContainer"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
+import SingleChatComponent from "./SingleChatComponent"
 
-const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
+const ProfilesContainer = ({
+  profileNames,
+  setChatSelected,
+  changeChat,
+  chatItems,
+}) => {
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
@@ -81,10 +87,10 @@ const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
           </div>
         </div>
         <div className='profiles-container mt-3 style-1'>
-          {profileNames.map((profile, i) => (
-            <SingleProfileContainer
+          {chatItems.map((chatItem, i) => (
+            <SingleChatComponent
               key={i}
-              profile={profile}
+              chatItem={chatItem}
               setChatSelected={setChatSelected}
               changeChat={changeChat}
             />
@@ -163,6 +169,16 @@ const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
             <i className='bi bi-search'></i>
             <input type='text' />
           </div>
+        </div>
+        <div className='contact-list-container'>
+          {profileNames.map((profile, i) => (
+            <SingleProfileContainer
+              key={i}
+              profile={profile}
+              setChatSelected={setChatSelected}
+              changeChat={changeChat}
+            />
+          ))}
         </div>
       </div>
     </>
