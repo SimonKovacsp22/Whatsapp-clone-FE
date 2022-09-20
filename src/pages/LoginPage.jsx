@@ -30,10 +30,10 @@ const LoginPage = () => {
         }),
       }
     )
-    let data = await response
-    console.log(data)
+    let data = await response.json()
+    console.log(data.token)
     //setLogUsers(data)
-    dispatch(loginUserDataActionWithThunk(`Bearer ${data}`))
+    dispatch(loginUserDataActionWithThunk(`Bearer ${data.token}`))
   }
 
   const handleSubmit = (e) => {

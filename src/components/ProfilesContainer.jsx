@@ -8,18 +8,18 @@ import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 
 const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
-
- 
-
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
+  const [showContacts, setShowContacts] = useState(false)
   const target = useRef(null)
 
   return (
     <>
       <div
         className={
-          !showProfile ? "col-6 col-xs-6 col-md-4 profile-container" : "d-none"
+          !showProfile && !showContacts
+            ? "col-6 col-xs-6 col-md-4 profile-container"
+            : "d-none"
         }>
         <div className='profile-nav-bar d-flex'>
           <div className='own-profile-container col-8 d-flex align-items-center'>
@@ -35,7 +35,9 @@ const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
               <div className='circle'></div>
               <div className='online-dot'></div>
             </div>
-            <i className='bi bi-chat-left-dots'></i>
+            <i
+              className='bi bi-chat-left-dots'
+              onClick={() => setShowContacts(!showContacts)}></i>
             <i
               className='bi bi-three-dots-vertical'
               ref={target}
@@ -137,6 +139,29 @@ const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
           <div className='d-flex justify-content-between align-items-center'>
             <h5>Hey there! I am using WhatsApp.</h5>{" "}
             <i className='bi bi-pen'></i>
+          </div>
+        </div>
+      </div>
+      <div
+        className={
+          showContacts
+            ? "col-6 col-xs-6 col-md-4 profile-container-show"
+            : "d-none"
+        }>
+        <div className='contact-profile-action-nav d-flex'>
+          <div className='col-2 d-flex justify-content-center align-items-end'>
+            <i
+              className='bi bi-arrow-left mb-2'
+              onClick={() => setShowContacts(!showContacts)}></i>
+          </div>
+          <div className='col-10 d-flex justify-content-between align-items-end'>
+            <h5>New chat</h5>
+          </div>
+        </div>
+        <div className='contact-search-bar my-2'>
+          <div className='d-flex justify-content-between align-items-center px-3'>
+            <i className='bi bi-search'></i>
+            <input type='text' />
           </div>
         </div>
       </div>
