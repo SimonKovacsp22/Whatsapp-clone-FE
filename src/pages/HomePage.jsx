@@ -9,6 +9,7 @@ const HomePage = () => {
   const [profileNames, setProfileNames] = useState([])
   const [chatSelected, setChatSelected] = useState(null)
   const [chatItems, setChatItems] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
 
   const getUsers = async () => {
     try {
@@ -37,7 +38,7 @@ const HomePage = () => {
       })
       if (resp.ok) {
         let chats = await resp.json()
-        console.log(chats)
+        //console.log(chats)
         setChatItems(chats)
       } else {
         console.log("error")
@@ -57,9 +58,12 @@ const HomePage = () => {
     <div className='main-container d-flex'>
       <ProfilesContainer
         profileNames={profileNames}
+        setProfileNames={setProfileNames}
         setChatSelect={setChatSelected}
         changeChat={changeChat}
         chatItems={chatItems}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
       <ChatContainer profileSelected={setChatSelected} />
     </div>

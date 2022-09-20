@@ -5,17 +5,16 @@ import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
-import {useSelector} from "react-redux"
+import { useSelector } from "react-redux"
 
 const ChatContainer = () => {
+  const selectedProfile = useSelector((state) => state.profile.selectedProfile)
 
-  const selectedProfile = useSelector(state => state.profile.selectedProfile)
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
   const target = useRef(null)
   return (
     <>
-    
       <div
         className={
           !searchMessage
@@ -25,11 +24,19 @@ const ChatContainer = () => {
         <div className='chat-container-nav d-flex align-items-center'>
           <div className='chat-container-profile-container d-flex align-items-center col-6'>
             <img
-              src='https://i.pinimg.com/736x/17/57/1c/17571cdf635b8156272109eaa9cb5900.jpg'
+              src={
+                selectedProfile && selectedProfile.avatar
+                  ? selectedProfile.avatar
+                  : "https://i.pinimg.com/736x/17/57/1c/17571cdf635b8156272109eaa9cb5900.jpg"
+              }
               alt='chat-container-profile-pic'
               className='chat-container-profile-pic'
             />
-            <h6 className='mx-3 mb-0'>Sidath Dabare</h6>
+            <h6 className='mx-3 mb-0'>
+              {selectedProfile && selectedProfile.username
+                ? selectedProfile.username
+                : ""}
+            </h6>
           </div>
           <div className='chat-container-nav col-6 d-flex align-items-center justify-content-end'>
             <i

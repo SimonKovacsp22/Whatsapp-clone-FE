@@ -14,7 +14,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-size: cover;
+  object-fit: contain;
   margin-left: 15px;
 }
 .online-status {
@@ -71,47 +71,35 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-size: cover;
+  object-fit: contain;
   margin-left: 15px;
 }
 
 div.profiles-container {
-  height: 100vh;
+  width: 100%;
+  height: 70vh;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 div.profiles-container::-webkit-scrollbar {
-  width: 6px; /* width of the entire scrollbar */
+  width: 6px;
 }
 div.profiles-container::-webkit-scrollbar-track {
-  background: #000000; /* color of the tracking area */
+  background: #000000;
 }
 div.profiles-container::-webkit-scrollbar-thumb {
-  background-color: rgb(87, 87, 87); /* color of the scroll thumb */
-  border: 3px solid rgb(55, 55, 55); /* creates padding around scroll thumb */
-}
-
-div.contact-list-container {
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  background-color: aqua;
-}
-div.contact-list-container::-webkit-scrollbar {
-  width: 6px; /* width of the entire scrollbar */
-}
-div.contact-list-container::-webkit-scrollbar-track {
-  background: #000000; /* color of the tracking area */
-}
-div.contact-list-container::-webkit-scrollbar-thumb {
-  background-color: rgb(87, 87, 87); /* color of the scroll thumb */
-  border: 3px solid rgb(55, 55, 55); /* creates padding around scroll thumb */
+  background-color: rgb(87, 87, 87);
+  border: 3px solid rgb(55, 55, 55);
 }
 
 .profile-container-show {
   width: 100%;
   height: 100%;
   border-bottom: 0.2px solid #404040;
+}
+.profile-container-show-picture {
+  width: 100%;
+  height: 40%;
 }
 
 .own-profile-action-nav {
@@ -127,9 +115,21 @@ div.contact-list-container::-webkit-scrollbar-thumb {
   border-radius: 50%;
   background-size: cover;
 }
-.profile-container-show-picture {
+div.contact-list-container {
   width: 100%;
-  height: 40%;
+  height: 70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+div.contact-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+div.contact-list-container::-webkit-scrollbar-track {
+  background: #000000;
+}
+div.contact-list-container::-webkit-scrollbar-thumb {
+  background-color: rgb(87, 87, 87);
+  border: 3px solid rgb(55, 55, 55);
 }
 
 .contact-profile-action-nav {

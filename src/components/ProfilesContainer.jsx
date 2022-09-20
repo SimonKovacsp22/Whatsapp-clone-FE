@@ -10,14 +10,34 @@ import SingleChatComponent from "./SingleChatComponent"
 
 const ProfilesContainer = ({
   profileNames,
+  setProfileNames,
   setChatSelected,
   changeChat,
   chatItems,
+  setSearchTerm,
+  searchTerm,
 }) => {
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
   const target = useRef(null)
+  //console.log(profileNames)
+
+  const handleSearch = (profileName) => {
+    if (profileName.length > 2) {
+      const filteredProfiles = profileNames.filter((profile) =>
+        profile?.username.toLowerCase().includes(profileName.toLowerCase())
+      )
+      console.log(filteredProfiles)
+      setProfileNames(filteredProfiles)
+    }
+  }
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch(event.target.value)
+    }
+  }
 
   return (
     <>
@@ -167,7 +187,19 @@ const ProfilesContainer = ({
         <div className='contact-search-bar my-2'>
           <div className='d-flex justify-content-between align-items-center px-3'>
             <i className='bi bi-search'></i>
-            <input type='text' />
+            <input
+              type='text'
+              value={searchTerm}
+              onClick={(event) => {
+                handleSearch(event.target.value)
+              }}
+              onKeyDown={(e) => {
+                handleKeyPress(e)
+              }}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
           </div>
         </div>
         <div className='contact-list-container'>

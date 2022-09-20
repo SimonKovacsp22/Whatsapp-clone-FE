@@ -39,7 +39,7 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     logInUser()
-    //navigate("/")
+    navigate("/")
   }
   useEffect(() => {}, [])
   return (
