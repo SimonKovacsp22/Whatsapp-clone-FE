@@ -7,7 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 
-const ProfilesContainer = () => {
+const ProfilesContainer = ({ profileNames, setChatSelected, changeChat }) => {
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const target = useRef(null)
@@ -76,18 +76,14 @@ const ProfilesContainer = () => {
           </div>
         </div>
         <div className='profiles-container mt-3 style-1'>
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
-          <SingleProfileContainer />
+          {profileNames.map((profile, i) => (
+            <SingleProfileContainer
+              key={i}
+              profile={profile}
+              setChatSelected={setChatSelected}
+              changeChat={changeChat}
+            />
+          ))}
         </div>
       </div>
       <div
@@ -104,6 +100,40 @@ const ProfilesContainer = () => {
           </div>
           <div className='col-10 d-flex justify-content-between align-items-end'>
             <h5>Profile</h5>
+          </div>
+        </div>
+        <div className='profile-container-show-picture d-flex justify-content-center align-items-center'>
+          <img
+            src='https://i.pinimg.com/736x/17/57/1c/17571cdf635b8156272109eaa9cb5900.jpg'
+            alt='own-profile-pic-big'
+            className='own-profile-pic-big'
+          />
+        </div>
+        <div className='px-3 py-2'>
+          <strong>
+            <small className='text-success'>Your name</small>
+          </strong>
+        </div>
+        <div className='px-3 py-3'>
+          <div className='d-flex justify-content-between align-items-center'>
+            <h5>Sidath Dabare</h5> <i className='bi bi-pen'></i>
+          </div>
+        </div>
+        <div className='px-3'>
+          <small className='text-secondary'>
+            This is not your username or pin. This name will be visible to your
+            WhatsApp contacts.
+          </small>
+        </div>
+        <div className='px-3 py-2'>
+          <strong>
+            <small className='text-success'>About</small>
+          </strong>
+        </div>
+        <div className='px-3 pt-2'>
+          <div className='d-flex justify-content-between align-items-center'>
+            <h5>Hey there! I am using WhatsApp.</h5>{" "}
+            <i className='bi bi-pen'></i>
           </div>
         </div>
       </div>
