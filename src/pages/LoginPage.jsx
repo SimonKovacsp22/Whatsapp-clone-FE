@@ -11,6 +11,7 @@ import { loginUserDataActionWithThunk } from "../redux/actions"
 const LoginPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const [logUsers, setLogUsers] = useState([])
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

@@ -8,15 +8,16 @@ import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import SingleChatComponent from "./SingleChatComponent"
 
-const ProfilesContainer = ({
-  profileNames,
-  setProfileNames,
-  setChatSelected,
-  changeChat,
-  chatItems,
-  setSearchTerm,
-  searchTerm,
-}) => {
+const ProfilesContainer = (props) => {
+  const {
+    profileNames,
+    setProfileNames,
+    setChatSelected,
+    changeChat,
+    chatItems,
+    setSearchTerm,
+    searchTerm,
+  } = props
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
