@@ -1,5 +1,5 @@
 /** @format */
-import { getDataForLoggedInUser } from "../lib/apiFunctions"
+import { getDataForLoggedInUser,getChats } from "../lib/apiFunctions"
 import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
 import { setLoggedInUserAction } from "../redux/actions"
@@ -40,32 +40,12 @@ const HomePage = () => {
     }
   }
 
-  const getChats = async () => {
-    let headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-type": "application/json",
-    }
-    try {
-      let resp = await fetch(process.env.REACT_APP_BE_URL + "/chat", {
-        method: "GET",
-        headers,
-      })
-      if (resp.ok) {
-        let chats = await resp.json()
-        console.log(chats.MyChats)
-        setChatItems(chats.MyChats)
-      } else {
-        console.log("error")
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+ 
   const changeChat = (user) => setChatSelected(user)
 
   useEffect(() => {
     getUsers()
-    getChats()
+    getChats(token).then( chats => setChatItems(chats) )
     //console.log(profileNames)
   }, [])
   return (

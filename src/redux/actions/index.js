@@ -4,6 +4,8 @@ export const SET_LOGGED_IN_USER = "SET_LOGGED_IN_USER"
 export const USER_LOGGED_IN = "USER_LOGGED_IN"
 export const SET_SELECTED_CHAT = "SET_SELECTED_CHAT"
 export const SET_TOKEN = "SET_TOKEN"
+export const SET_SELECTED_CHAT_MESSAGES = "SET_SELECTED_CHAT_MESSAGES"
+export const SEND_MESSAGE = "SEND_MESSAGE"
 
 export const setLoggedInUserAction = (user) => {
   return {
@@ -17,6 +19,24 @@ export const setSelectedChatAction = (chat) => {
     payload: chat,
   }
 }
+
+export const setSelectedChatMessagesAction = (messages) => {
+  return {
+    type: SET_SELECTED_CHAT_MESSAGES,
+    payload: messages,
+  }
+}
+
+export const sendMessageAction = (message) => {
+  return {
+    type: SEND_MESSAGE,
+    payload: message
+  }
+}
+
+
+
+
 
 export const loginUserDataActionWithThunk = (userData) => {
   return async (dispatch) => {

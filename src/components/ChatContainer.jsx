@@ -5,15 +5,20 @@ import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import {sendMessageAction,setSelectedChatMessagesAction} from "../redux/actions/index"
+import { getChats,getDataForSpecificChat } from '../lib/apiFunctions'
 
 
 const ChatContainer = () => {
 
+  const dispatch = useDispatch()
 
   const loggedInUser = useSelector((state) => state.profile.loggedInUser)
   const selectedChat = useSelector((state) => state.chat.selectedChat)
   const recipients = selectedChat?.members
+  const messages = useSelector(state => state.chat.selectedChatMessages)
+  const token = useSelector(state => state.profile.token)
 
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
@@ -26,6 +31,8 @@ const ChatContainer = () => {
 
   const sendMessage = (recipients, text) => {
     socket.emit('send-message', {recipients, text})
+    dispatch(sendMessageAction({content:{ text:text, media:''}, sender:loggedInUser._id}))
+    
 
   }
 
@@ -38,11 +45,12 @@ const ChatContainer = () => {
 
     return () => newSocket.close
    
-  },[loggedInUser?._id])
+  },[loggedInUser,selectedChat])
 
   useEffect(()=> {
+    getDataForSpecificChat(selectedChat._id).then(chat => dispatch(setSelectedChatMessagesAction(chat.messages)))
     // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
-  })
+  },[selectedChat?._id])
   return (
     <>
       <div
@@ -124,7 +132,7 @@ const ChatContainer = () => {
             {member?.username+ ", " }
           </span>))}
 
-          <div >{selectedChat?.messages?.map( message => (<p key={message._id} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
+          <div >{messages?.map( (message,idx) => (<p key={idx} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
         </div>
         <div className='chat-input-container d-flex align-items-center justify-content-between'>
           <div
@@ -142,12 +150,12 @@ const ChatContainer = () => {
                 ? "chat-input col-10 d-flex align-items-center"
                 : "chat-input col-9 d-flex align-items-center"
             }>
-            <form onSubmit={(e)=> 
+            <form className='w-100' onSubmit={(e)=> 
               {e.preventDefault()
                sendMessage(recipients.map( r=> r._id), messageText)
                }}>
               <input type='text' disabled={ selectedChat? false : true} value={messageText} onChange={(e)=> setMessageText(e.target.value)} placeholder='type...' className='chat-input-input col-12' />
-              <button type='submit'>Send Message</button>
+              
               </form>
           </div>
           <div className='col-1 d-flex align-items-center justify-content-around'>
