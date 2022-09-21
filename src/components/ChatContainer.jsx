@@ -35,7 +35,7 @@ const ChatContainer = () => {
 
   useEffect(() => {
     const newSocket = io(process.env.REACT_APP_BE_URL, {
-      query: { id: loggedInUser?._id, chatId: selectedChat._id },
+      query: { id: loggedInUser?._id, chatId: selectedChat?._id },
       transports: ["websocket"],
     })
     setSocket(newSocket)
@@ -45,7 +45,8 @@ const ChatContainer = () => {
   },[loggedInUser,selectedChat])
 
   useEffect(()=> {
-    getDataForSpecificChat(selectedChat._id).then(chat => dispatch(setSelectedChatMessagesAction(chat.messages)))
+    if(selectedChat?._id) getDataForSpecificChat(selectedChat?._id).then(chat => dispatch(setSelectedChatMessagesAction(chat.messages)))
+   
     // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
   },[selectedChat?._id])
   return (
