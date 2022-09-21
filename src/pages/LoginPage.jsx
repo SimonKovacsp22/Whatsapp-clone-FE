@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { loginUserDataActionWithThunk } from "../redux/actions"
+import { loginUserDataActionWithThunk, setTokenAction } from "../redux/actions"
 
 const LoginPage = () => {
   const dispatch = useDispatch()
@@ -31,16 +31,24 @@ const LoginPage = () => {
         }),
       }
     )
-    let data = await response.json()
+
+
+
+    if(response.ok){
+      let data = await response.json()
     console.log(data.token)
+    dispatch(setTokenAction(data.token))
     //setLogUsers(data)
-    dispatch(loginUserDataActionWithThunk(`Bearer ${data.token}`))
+  
+      navigate("/")
+    }
+    
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     logInUser()
-    navigate("/")
+    
   }
   useEffect(() => {}, [])
   return (

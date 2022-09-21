@@ -1,18 +1,48 @@
 /** @format */
-
-import React, { useState, useRef } from "react"
+import io from 'socket.io-client'
+import React, { useState, useRef, useEffect } from "react"
 import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 
+
 const ChatContainer = () => {
-  const selectedProfile = useSelector((state) => state.profile.selectedProfile)
+
+
+  const loggedInUser = useSelector((state) => state.profile.loggedInUser)
+  const selectedChat = useSelector((state) => state.chat.selectedChat)
+  const recipients = selectedChat?.members
 
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
+  const [socket, setSocket] = useState()
+  const [messageText,setMessageText] = useState('')
+ 
+
   const target = useRef(null)
+
+
+  const sendMessage = (recipients, text) => {
+    socket.emit('send-message', {recipients, text})
+
+  }
+
+  useEffect(()=> {
+
+    const newSocket = io(process.env.REACT_APP_BE_URL, {query: { id: loggedInUser?._id, chatId: selectedChat._id}, transports:["websocket"]})
+    setSocket(newSocket)
+
+   
+
+    return () => newSocket.close
+   
+  },[loggedInUser?._id])
+
+  useEffect(()=> {
+    // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
+  })
   return (
     <>
       <div
@@ -25,16 +55,16 @@ const ChatContainer = () => {
           <div className='chat-container-profile-container d-flex align-items-center col-6'>
             <img
               src={
-                selectedProfile && selectedProfile.avatar
-                  ? selectedProfile.avatar
+                loggedInUser && loggedInUser.avatar
+                  ? loggedInUser.avatar
                   : "https://i.pinimg.com/736x/17/57/1c/17571cdf635b8156272109eaa9cb5900.jpg"
               }
               alt='chat-container-profile-pic'
               className='chat-container-profile-pic'
             />
             <h6 className='mx-3 mb-0'>
-              {selectedProfile && selectedProfile.username
-                ? selectedProfile.username
+              {loggedInUser && loggedInUser.username
+                ? loggedInUser.username
                 : ""}
             </h6>
           </div>
@@ -88,7 +118,14 @@ const ChatContainer = () => {
             </Overlay>
           </div>
         </div>
-        <div className='chat-content'></div>
+        <div className='chat-content'>
+
+          {selectedChat?.members?.map( member => (<span key={member._id}>
+            {member?.username+ ", " }
+          </span>))}
+
+          <div >{selectedChat?.messages?.map( message => (<p key={message._id} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
+        </div>
         <div className='chat-input-container d-flex align-items-center justify-content-between'>
           <div
             className={
@@ -105,7 +142,13 @@ const ChatContainer = () => {
                 ? "chat-input col-10 d-flex align-items-center"
                 : "chat-input col-9 d-flex align-items-center"
             }>
-            <input type='text' className='chat-input-input col-12' />
+            <form onSubmit={(e)=> 
+              {e.preventDefault()
+               sendMessage(recipients.map( r=> r._id), messageText)
+               }}>
+              <input type='text' disabled={ selectedChat? false : true} value={messageText} onChange={(e)=> setMessageText(e.target.value)} placeholder='type...' className='chat-input-input col-12' />
+              <button type='submit'>Send Message</button>
+              </form>
           </div>
           <div className='col-1 d-flex align-items-center justify-content-around'>
             <i className='bi bi-mic icon-large'></i>

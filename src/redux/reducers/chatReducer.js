@@ -3,7 +3,7 @@
 import { SET_SELECTED_CHAT } from "../actions/index"
 const initialState = {
   chats: [],
-  selectedProfile: null,
+  selectedChat: null,
 }
 
 const chatReducer = (state = initialState, action) => {
@@ -11,7 +11,7 @@ const chatReducer = (state = initialState, action) => {
     case SET_SELECTED_CHAT:
       return {
         ...state,
-        selectedProfile: action.payload,
+        selectedChat: action.payload,
       }
     default:
       return state

@@ -1,22 +1,36 @@
 /** @format */
-
+import { getDataForLoggedInUser } from "../lib/apiFunctions"
+import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
+import { setLoggedInUserAction } from "../redux/actions"
 import "../styles/HomePage.css"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
 
 const HomePage = () => {
+
+
+
+  const token = useSelector(state => state.profile.token)
+
+ const dispatch= useDispatch()
+
   const [profileNames, setProfileNames] = useState([])
   const [chatSelected, setChatSelected] = useState(null)
   const [chatItems, setChatItems] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
+
+   useEffect( ()=> {
+    getDataForLoggedInUser(token).then( data => dispatch(setLoggedInUserAction(data)))
+    
+   },[])
 
   const getUsers = async () => {
     try {
       let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
       if (resp.ok) {
         let users = await resp.json()
-        //console.log(users)
+      
         setProfileNames(users)
       } else {
         console.log("error")
@@ -28,7 +42,7 @@ const HomePage = () => {
 
   const getChats = async () => {
     let headers = {
-      Authorization: `Bearer ${process.env.REACT_APP_USER_TOKEN}`,
+      Authorization: `Bearer ${token}`,
       "Content-type": "application/json",
     }
     try {
@@ -38,8 +52,8 @@ const HomePage = () => {
       })
       if (resp.ok) {
         let chats = await resp.json()
-        //console.log(chats)
-        setChatItems(chats)
+        console.log(chats.MyChats)
+        setChatItems(chats.MyChats)
       } else {
         console.log("error")
       }

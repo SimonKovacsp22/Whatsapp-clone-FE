@@ -1,12 +1,13 @@
 /** @format */
 
-export const SET_SELECTED_PROFILE = "SET_SELECTED_PROFILE"
+export const SET_LOGGED_IN_USER = "SET_LOGGED_IN_USER"
 export const USER_LOGGED_IN = "USER_LOGGED_IN"
 export const SET_SELECTED_CHAT = "SET_SELECTED_CHAT"
+export const SET_TOKEN = "SET_TOKEN"
 
-export const setSelectedUserAction = (user) => {
+export const setLoggedInUserAction = (user) => {
   return {
-    type: SET_SELECTED_PROFILE,
+    type: SET_LOGGED_IN_USER,
     payload: user,
   }
 }
@@ -30,4 +31,11 @@ export const loginUserDataActionWithThunk = (userData) => {
       console.log(error)
     }
   }
+}
+
+export const setTokenAction = (token) => {
+      return {
+        type: SET_TOKEN,
+        payload: token
+      }
 }

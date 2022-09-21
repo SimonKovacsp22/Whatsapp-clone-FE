@@ -16,7 +16,6 @@ const SingleProfileContainer = ({ profile, setChatSelected, changeChat }) => {
       }
       onClick={() => {
         changeChat(profile)
-        dispatch(setSelectedUserAction(profile))
       }}>
       <div className='single-pro-picture col-2 d-flex align-items-center'>
         <img

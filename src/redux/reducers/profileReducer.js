@@ -1,14 +1,21 @@
-import {SET_SELECTED_PROFILE} from '../actions/index'
+import {SET_LOGGED_IN_USER, SET_TOKEN} from '../actions/index'
 const initialState = {
     profiles:[],
-    selectedProfile: null
+    loggedInUser: null,
+    token:''
 }
 
 const profilesReducer = (state= initialState, action) => {
     switch(action.type) {
-        case SET_SELECTED_PROFILE: 
+        case SET_LOGGED_IN_USER: 
         return {
-            ...state, selectedProfile: action.payload
+            ...state, loggedInUser: action.payload
+        }
+
+        case SET_TOKEN: {
+            return {
+                ...state, token: action.payload
+            }
         }
         default: 
         return state
