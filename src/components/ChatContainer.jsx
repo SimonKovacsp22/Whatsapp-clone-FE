@@ -1,5 +1,5 @@
 /** @format */
-import io from 'socket.io-client'
+import io from "socket.io-client"
 import React, { useState, useRef, useEffect } from "react"
 import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
@@ -7,10 +7,7 @@ import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 
-
 const ChatContainer = () => {
-
-
   const loggedInUser = useSelector((state) => state.profile.loggedInUser)
   const selectedChat = useSelector((state) => state.chat.selectedChat)
   const recipients = selectedChat?.members
@@ -18,29 +15,25 @@ const ChatContainer = () => {
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
   const [socket, setSocket] = useState()
-  const [messageText,setMessageText] = useState('')
- 
+  const [messageText, setMessageText] = useState("")
 
   const target = useRef(null)
 
-
   const sendMessage = (recipients, text) => {
-    socket.emit('send-message', {recipients, text})
-
+    socket.emit("send-message", { recipients, text })
   }
 
-  useEffect(()=> {
-
-    const newSocket = io(process.env.REACT_APP_BE_URL, {query: { id: loggedInUser?._id, chatId: selectedChat._id}, transports:["websocket"]})
+  useEffect(() => {
+    const newSocket = io(process.env.REACT_APP_BE_URL, {
+      query: { id: loggedInUser?._id, chatId: selectedChat._id },
+      transports: ["websocket"],
+    })
     setSocket(newSocket)
 
-   
-
     return () => newSocket.close
-   
-  },[loggedInUser?._id])
+  }, [loggedInUser?._id])
 
-  useEffect(()=> {
+  useEffect(() => {
     // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
   })
   return (
@@ -119,12 +112,19 @@ const ChatContainer = () => {
           </div>
         </div>
         <div className='chat-content'>
+          {selectedChat?.members?.map((member) => (
+            <span key={member._id}>{member?.username + ", "}</span>
+          ))}
 
-          {selectedChat?.members?.map( member => (<span key={member._id}>
-            {member?.username+ ", " }
-          </span>))}
-
-          <div >{selectedChat?.messages?.map( message => (<p key={message._id} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
+          <div>
+            {selectedChat?.messages?.map((message) => (
+              <p
+                key={message._id}
+                style={{ backgroudColor: "black", background: "black" }}>
+                {message.content.text}
+              </p>
+            ))}
+          </div>
         </div>
         <div className='chat-input-container d-flex align-items-center justify-content-between'>
           <div
@@ -142,13 +142,24 @@ const ChatContainer = () => {
                 ? "chat-input col-10 d-flex align-items-center"
                 : "chat-input col-9 d-flex align-items-center"
             }>
-            <form onSubmit={(e)=> 
-              {e.preventDefault()
-               sendMessage(recipients.map( r=> r._id), messageText)
-               }}>
-              <input type='text' disabled={ selectedChat? false : true} value={messageText} onChange={(e)=> setMessageText(e.target.value)} placeholder='type...' className='chat-input-input col-12' />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                sendMessage(
+                  recipients.map((r) => r._id),
+                  messageText
+                )
+              }}>
+              <input
+                type='text'
+                disabled={selectedChat ? false : true}
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+                placeholder='type...'
+                className='chat-input-input col-12'
+              />
               <button type='submit'>Send Message</button>
-              </form>
+            </form>
           </div>
           <div className='col-1 d-flex align-items-center justify-content-around'>
             <i className='bi bi-mic icon-large'></i>

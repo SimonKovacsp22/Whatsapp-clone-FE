@@ -8,29 +8,27 @@ import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
 
 const HomePage = () => {
+  const token = useSelector((state) => state.profile.token)
 
-
-
-  const token = useSelector(state => state.profile.token)
-
- const dispatch= useDispatch()
+  const dispatch = useDispatch()
 
   const [profileNames, setProfileNames] = useState([])
   const [chatSelected, setChatSelected] = useState(null)
   const [chatItems, setChatItems] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
 
-   useEffect( ()=> {
-    getDataForLoggedInUser(token).then( data => dispatch(setLoggedInUserAction(data)))
-    
-   },[])
+  useEffect(() => {
+    getDataForLoggedInUser(token).then((data) =>
+      dispatch(setLoggedInUserAction(data))
+    )
+  }, [])
 
   const getUsers = async () => {
     try {
       let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
       if (resp.ok) {
         let users = await resp.json()
-      
+
         setProfileNames(users)
       } else {
         console.log("error")
