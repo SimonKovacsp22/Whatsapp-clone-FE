@@ -1,5 +1,5 @@
 /** @format */
-import io from 'socket.io-client'
+import io from "socket.io-client"
 import React, { useState, useRef, useEffect } from "react"
 import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
@@ -8,7 +8,6 @@ import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {sendMessageAction,setSelectedChatMessagesAction} from "../redux/actions/index"
 import { getChats,getDataForSpecificChat } from '../lib/apiFunctions'
-
 
 const ChatContainer = () => {
 
@@ -23,11 +22,9 @@ const ChatContainer = () => {
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
   const [socket, setSocket] = useState()
-  const [messageText,setMessageText] = useState('')
- 
+  const [messageText, setMessageText] = useState("")
 
   const target = useRef(null)
-
 
   const sendMessage = (recipients, text) => {
     socket.emit('send-message', {recipients, text})
@@ -36,12 +33,12 @@ const ChatContainer = () => {
 
   }
 
-  useEffect(()=> {
-
-    const newSocket = io(process.env.REACT_APP_BE_URL, {query: { id: loggedInUser?._id, chatId: selectedChat._id}, transports:["websocket"]})
+  useEffect(() => {
+    const newSocket = io(process.env.REACT_APP_BE_URL, {
+      query: { id: loggedInUser?._id, chatId: selectedChat._id },
+      transports: ["websocket"],
+    })
     setSocket(newSocket)
-
-   
 
     return () => newSocket.close
    
@@ -127,6 +124,9 @@ const ChatContainer = () => {
           </div>
         </div>
         <div className='chat-content'>
+          {selectedChat?.members?.map((member) => (
+            <span key={member._id}>{member?.username + ", "}</span>
+          ))}
 
           {selectedChat?.members?.map( member => (<span key={member._id}>
             {member?.username+ ", " }
