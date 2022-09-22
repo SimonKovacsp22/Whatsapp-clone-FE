@@ -1,10 +1,15 @@
 /** @format */
 
-import { SET_SELECTED_CHAT,SET_SELECTED_CHAT_MESSAGES,SEND_MESSAGE } from "../actions/index"
+import {
+  SET_SELECTED_CHAT,
+  SET_SELECTED_CHAT_MESSAGES,
+  SEND_MESSAGE,
+  GET_ALL_CHATS,
+} from "../actions/index"
 const initialState = {
   chats: [],
   selectedChat: null,
-  selectedChatMessages:[]
+  selectedChatMessages: [],
 }
 
 const chatReducer = (state = initialState, action) => {
@@ -15,18 +20,25 @@ const chatReducer = (state = initialState, action) => {
         selectedChat: action.payload,
       }
 
-    case SET_SELECTED_CHAT_MESSAGES:
-      {
-        return {
-          ...state, selectedChatMessages:action.payload
-        }
+    case SET_SELECTED_CHAT_MESSAGES: {
+      return {
+        ...state,
+        selectedChatMessages: action.payload,
       }
-    
-      case SEND_MESSAGE: {
-        return {
-          ...state, selectedChatMessages:[...state.selectedChatMessages, action.payload]
-        }
+    }
+
+    case SEND_MESSAGE: {
+      return {
+        ...state,
+        selectedChatMessages: [...state.selectedChatMessages, action.payload],
       }
+    }
+    case GET_ALL_CHATS: {
+      return {
+        ...state,
+        chats: action.payload,
+      }
+    }
     default:
       return state
   }

@@ -7,6 +7,8 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import SingleChatComponent from "./SingleChatComponent"
+import SingleProfileChat from "./SingleProfileChat"
+import { useSelector } from "react-redux"
 
 const ProfilesContainer = (props) => {
   const {
@@ -14,18 +16,25 @@ const ProfilesContainer = (props) => {
     setProfileNames,
     setChatSelected,
     changeChat,
-    chatItems,
     setSearchTerm,
     searchTerm,
+    setCreateGroup,
+    createGroup,
   } = props
+
+  const token = useSelector((state) => state.profile.token)
+  const allChatItems = useSelector((state) => state.chat.chats)
+
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
+  const [showList, setShowList] = useState(false)
+
   const target = useRef(null)
-  //console.log(profileNames)
+  console.log(createGroup)
 
   const handleSearch = (profileName) => {
-    if (profileName.length > 2) {
+    if (profileName.length > 3) {
       const filteredProfiles = profileNames.filter((profile) =>
         profile?.username.toLowerCase().includes(profileName.toLowerCase())
       )
@@ -39,12 +48,34 @@ const ProfilesContainer = (props) => {
       handleSearch(event.target.value)
     }
   }
+  const addToChat = async (users) => {
+    try {
+      let resp = await fetch(process.env.REACT_APP_BE_URL + "/chat", {
+        method: "POST",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipient: createGroup.map((item) => item._id),
+        }),
+      })
+      if (resp.ok) {
+        let chat = await resp.json()
+        console.log(chat)
+      } else {
+        console.log("error")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
       <div
         className={
-          !showProfile && !showContacts
+          !showProfile && !showContacts && !showList
             ? "col-6 col-xs-6 col-md-4 profile-container"
             : "d-none"
         }>
@@ -81,9 +112,12 @@ const ProfilesContainer = (props) => {
                     borderRadius: 2,
                     ...props.style,
                   }}>
-                  <ListGroup className='chat-dropdown-list'>
+                  <ListGroup
+                    className={!showList ? "chat-dropdown-list" : "d-none"}>
                     <ListGroup.Item>
-                      <Link to='/'>New group</Link>
+                      <Link to='/' onClick={() => setShowList(!showList)}>
+                        New group
+                      </Link>
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <Link to='/'>Starred messages</Link>
@@ -108,7 +142,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='profiles-container mt-3 style-1'>
-          {chatItems.map((chatItem, i) => (
+          {allChatItems.map((chatItem, i) => (
             <SingleChatComponent
               key={i}
               chatItem={chatItem}
@@ -210,6 +244,85 @@ const ProfilesContainer = (props) => {
               profile={profile}
               setChatSelected={setChatSelected}
               changeChat={changeChat}
+            />
+          ))}
+        </div>
+      </div>
+      <div
+        className={
+          showList ? "col-6 col-xs-6 col-md-4 profile-container-show" : "d-none"
+        }>
+        <div className='contact-profile-action-nav d-flex'>
+          <div className='col-2 d-flex justify-content-center align-items-end'>
+            <i
+              className='bi bi-arrow-left mb-2'
+              onClick={() => setShowList(!showList)}></i>
+          </div>
+          <div className='col-10 d-flex justify-content-between align-items-end'>
+            <h5>Add group participent</h5>
+          </div>
+        </div>
+        {createGroup.length > 0 ? (
+          <div className='display-users d-flex my-1'>
+            {createGroup.map((user, i) => (
+              <div
+                key={i}
+                className='d-flex justify-content-between px-2 display-users-item'>
+                <span>{user.username}</span>
+                <span>
+                  <i
+                    className='bi bi-x text-danger'
+                    onClick={() => {
+                      console.log(user)
+                      createGroup.splice(createGroup.indexOf(user), 1)
+
+                      setCreateGroup([...createGroup])
+                    }}></i>
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
+
+        <div className='d-flex'>
+          {createGroup.length > 0 ? (
+            <button className='mx-auto create-chat-btn' onClick={addToChat}>
+              <i className='bi bi-plus'></i> Create Chat
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <div className='contact-search-bar my-2'>
+          <div className='d-flex justify-content-between align-items-center px-3'>
+            <i className='bi bi-search'></i>
+            <input
+              type='text'
+              value={searchTerm}
+              onClick={(event) => {
+                handleSearch(event.target.value)
+              }}
+              onKeyDown={(e) => {
+                handleKeyPress(e)
+              }}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
+          </div>
+        </div>
+        <div className='contact-list-container'>
+          {profileNames.map((profile, i) => (
+            <SingleProfileChat
+              key={i}
+              profile={profile}
+              setChatSelected={setChatSelected}
+              changeChat={changeChat}
+              setCreateGroup={setCreateGroup}
+              createGroup={createGroup}
             />
           ))}
         </div>

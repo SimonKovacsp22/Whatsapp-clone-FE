@@ -1,8 +1,8 @@
 /** @format */
-import { getDataForLoggedInUser,getChats } from "../lib/apiFunctions"
+import { getDataForLoggedInUser, getChats } from "../lib/apiFunctions"
 import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
-import { setLoggedInUserAction } from "../redux/actions"
+import { getAllChatAction, setLoggedInUserAction } from "../redux/actions"
 import "../styles/HomePage.css"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
@@ -14,14 +14,15 @@ const HomePage = () => {
 
   const [profileNames, setProfileNames] = useState([])
   const [chatSelected, setChatSelected] = useState(null)
-  const [chatItems, setChatItems] = useState([])
+  const [createGroup, setCreateGroup] = useState([])
+
   const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    getDataForLoggedInUser(token).then((data) =>
-      dispatch(setLoggedInUserAction(data))
-    )
-  }, [])
+  // useEffect(() => {
+  //   getDataForLoggedInUser(token).then((data) =>
+  //     dispatch(setLoggedInUserAction(data))
+  //   )
+  // }, [])
 
   const getUsers = async () => {
     try {
@@ -38,13 +39,14 @@ const HomePage = () => {
     }
   }
 
- 
   const changeChat = (user) => setChatSelected(user)
 
   useEffect(() => {
+    getDataForLoggedInUser(token).then((data) =>
+      dispatch(setLoggedInUserAction(data))
+    )
     getUsers()
-    getChats(token).then( chats => setChatItems(chats) )
-    //console.log(profileNames)
+    getChats(token).then((chats) => dispatch(getAllChatAction(chats)))
   }, [])
   return (
     <div className='main-container d-flex'>
@@ -53,9 +55,10 @@ const HomePage = () => {
         setProfileNames={setProfileNames}
         setChatSelect={setChatSelected}
         changeChat={changeChat}
-        chatItems={chatItems}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        setCreateGroup={setCreateGroup}
+        createGroup={createGroup}
       />
       <ChatContainer profileSelected={setChatSelected} />
     </div>

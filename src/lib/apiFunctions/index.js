@@ -1,13 +1,14 @@
-import axios from 'axios'
+/** @format */
 
+import axios from "axios"
 
-
-export const getDataForLoggedInUser =async  (token) => {
-    const response = await axios.get(process.env.REACT_APP_BE_URL + '/users/me',{ headers: {
-        Authorization: `Bearer ${token}`
-      }}
-      )
-    return response.data
+export const getDataForLoggedInUser = async (token) => {
+  const response = await axios.get(process.env.REACT_APP_BE_URL + "/users/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return response.data
 }
 
 export const getChats = async (token) => {
@@ -22,9 +23,8 @@ export const getChats = async (token) => {
     })
     if (resp.ok) {
       let chats = await resp.json()
-      
+
       return chats.MyChats
-      
     } else {
       console.log("error")
     }
@@ -33,8 +33,10 @@ export const getChats = async (token) => {
   }
 }
 
-export const getDataForSpecificChat  = async  (chatId) => {
-  const response = await axios.get(process.env.REACT_APP_BE_URL + '/chat/' + chatId,)
-   
+export const getDataForSpecificChat = async (chatId) => {
+  const response = await axios.get(
+    process.env.REACT_APP_BE_URL + "/chat/" + chatId
+  )
+
   return response.data
 }
