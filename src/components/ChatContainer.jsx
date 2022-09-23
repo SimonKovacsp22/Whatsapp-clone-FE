@@ -7,9 +7,18 @@ import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {sendMessageAction,setSelectedChatMessagesAction} from "../redux/actions/index"
-import { getChats,getDataForSpecificChat } from '../lib/apiFunctions'
+import { getDataForSpecificChat } from '../lib/apiFunctions'
+import { v4 as uuidV4 } from "uuid"
+
+
+const newSocket = io(process.env.REACT_APP_BE_URL, {
+  transports: ["websocket"],
+})
 
 const ChatContainer = () => {
+
+
+
 
   const dispatch = useDispatch()
 
@@ -17,37 +26,44 @@ const ChatContainer = () => {
   const selectedChat = useSelector((state) => state.chat.selectedChat)
   const recipients = selectedChat?.members
   const messages = useSelector(state => state.chat.selectedChatMessages)
-  const token = useSelector(state => state.profile.token)
-
   const [show, setShow] = useState(false)
   const [searchMessage, setSearchMessage] = useState(false)
-  const [socket, setSocket] = useState()
   const [messageText, setMessageText] = useState("")
 
   const target = useRef(null)
 
-  const sendMessage = (recipients, text) => {
-    socket.emit('send-message', {recipients, text})
-    dispatch(sendMessageAction({content:{ text:text, media:''}, sender:loggedInUser._id}))
-    
+  const sendMessage =  () => {
 
+    const messageData = {
+      text: messageText,
+      room: selectedChat._id,
+      sender: loggedInUser._id,
+      time: new Date(Date.now()).getHours() +
+      ":" +
+      new Date(Date.now()).getMinutes(),
+    }
+     newSocket.emit('send_message', messageData)
+     dispatch(sendMessageAction({_id: uuidV4() ,sender: messageData.sender, content: { text: messageData.text,media: "" }})) 
+     
   }
 
-  useEffect(() => {
-    const newSocket = io(process.env.REACT_APP_BE_URL, {
-      query: { id: loggedInUser?._id, chatId: selectedChat._id },
-      transports: ["websocket"],
+  useEffect(()=>{
+    if(selectedChat?._id){getDataForSpecificChat(selectedChat._id).then(data => dispatch(setSelectedChatMessagesAction(data.messages)))
+    newSocket.emit("join_room", selectedChat._id);}
+    
+  },[selectedChat])
+
+   useEffect(()=>{
+    newSocket.on("receive_message", (receivedMessage) => {
+     console.log(receivedMessage)
+     dispatch(sendMessageAction({_id: uuidV4() ,sender:receivedMessage.sender, content: { text:receivedMessage.text,media: "" }})) 
     })
-    setSocket(newSocket)
+      
+     
 
-    return () => newSocket.close
-   
-  },[loggedInUser,selectedChat])
+   },[])
 
-  useEffect(()=> {
-    getDataForSpecificChat(selectedChat._id).then(chat => dispatch(setSelectedChatMessagesAction(chat.messages)))
-    // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
-  },[selectedChat?._id])
+
   return (
     <>
       <div
@@ -123,16 +139,14 @@ const ChatContainer = () => {
             </Overlay>
           </div>
         </div>
-        <div className='chat-content'>
+        <div className='chat-content overflow-auto'>
           {selectedChat?.members?.map((member) => (
             <span key={member._id}>{member?.username + ", "}</span>
           ))}
 
-          {selectedChat?.members?.map( member => (<span key={member._id}>
-            {member?.username+ ", " }
-          </span>))}
+       
 
-          <div >{messages?.map( (message,idx) => (<p key={idx} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
+          <div >{messages?.map( (message) => (<p key={ message._id} style={{backgroudColor:"black",background:"black"}}>{message.content.text}</p>))}</div>
         </div>
         <div className='chat-input-container d-flex align-items-center justify-content-between'>
           <div
@@ -152,7 +166,7 @@ const ChatContainer = () => {
             }>
             <form className='w-100' onSubmit={(e)=> 
               {e.preventDefault()
-               sendMessage(recipients.map( r=> r._id), messageText)
+               sendMessage()
                }}>
               <input type='text' disabled={ selectedChat? false : true} value={messageText} onChange={(e)=> setMessageText(e.target.value)} placeholder='type...' className='chat-input-input col-12' />
               
@@ -191,6 +205,6 @@ const ChatContainer = () => {
       </div>
     </>
   )
-}
-
+      }
+    
 export default ChatContainer

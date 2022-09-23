@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useState, useRef } from "react"
+import { useSelector } from "react-redux"
 import "../styles/ProfilesContainer.css"
 import SingleProfileContainer from "./SingleProfileContainer"
 import ListGroup from "react-bootstrap/ListGroup"
@@ -9,9 +10,9 @@ import { Link } from "react-router-dom"
 import SingleChatComponent from "./SingleChatComponent"
 
 const ProfilesContainer = (props) => {
+
+  const profiles = useSelector( state => state.profile.profiles)
   const {
-    profileNames,
-    setProfileNames,
     setChatSelected,
     changeChat,
     chatItems,
@@ -21,16 +22,21 @@ const ProfilesContainer = (props) => {
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
+  const [profileNames, setProfileNames] = useState(profiles)
   const target = useRef(null)
-  //console.log(profileNames)
+
 
   const handleSearch = (profileName) => {
     if (profileName.length > 2) {
-      const filteredProfiles = profileNames.filter((profile) =>
+      const filteredProfiles = profiles.filter((profile) =>
         profile?.username.toLowerCase().includes(profileName.toLowerCase())
       )
       console.log(filteredProfiles)
       setProfileNames(filteredProfiles)
+    }
+
+    else {
+      setProfileNames(profiles)
     }
   }
 
@@ -204,7 +210,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='contact-list-container'>
-          {profileNames.map((profile, i) => (
+          {profileNames?.map((profile, i) => (
             <SingleProfileContainer
               key={i}
               profile={profile}

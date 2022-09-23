@@ -3,7 +3,7 @@
 import React from "react"
 import "../styles/SingleChatComponent.css"
 import { useDispatch } from "react-redux"
-import { setSelectedChatAction, setSelectedChatMessagesAction } from "../redux/actions"
+import { setSelectedChatAction} from "../redux/actions"
 
 const SingleChatComponent = ({
   profile,
@@ -11,7 +11,11 @@ const SingleChatComponent = ({
   changeChat,
   chatItem,
 }) => {
+
+
   const dispatch = useDispatch()
+
+  
   return (
     <div
       className={

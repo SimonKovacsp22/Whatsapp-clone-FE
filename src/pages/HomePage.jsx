@@ -1,8 +1,8 @@
 /** @format */
-import { getDataForLoggedInUser,getChats } from "../lib/apiFunctions"
+import { getDataForLoggedInUser,getChats, getUsers } from "../lib/apiFunctions"
 import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
-import { setLoggedInUserAction } from "../redux/actions"
+import { setLoggedInUserAction, setSelectedChatAction, setProfilesAction } from "../redux/actions"
 import "../styles/HomePage.css"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
@@ -21,36 +21,24 @@ const HomePage = () => {
     getDataForLoggedInUser(token).then((data) =>
       dispatch(setLoggedInUserAction(data))
     )
+    getUsers().then( users => dispatch(setProfilesAction(users)))
+    getChats(token).then( chats => {
+      setChatItems(chats)
+      // dispatch(setSelectedChatAction(chats[0]))
+    } )
+    
   }, [])
 
-  const getUsers = async () => {
-    try {
-      let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
-      if (resp.ok) {
-        let users = await resp.json()
-
-        setProfileNames(users)
-      } else {
-        console.log("error")
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
- 
+  
   const changeChat = (user) => setChatSelected(user)
 
-  useEffect(() => {
-    getUsers()
-    getChats(token).then( chats => setChatItems(chats) )
-    //console.log(profileNames)
-  }, [])
+
+
+ 
   return (
     <div className='main-container d-flex'>
       <ProfilesContainer
-        profileNames={profileNames}
-        setProfileNames={setProfileNames}
+        
         setChatSelect={setChatSelected}
         changeChat={changeChat}
         chatItems={chatItems}
