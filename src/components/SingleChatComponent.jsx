@@ -3,13 +3,21 @@
 import React from "react"
 import "../styles/SingleChatComponent.css"
 import { useDispatch, useSelector } from "react-redux"
-import { setSelectedChatAction } from "../redux/actions"
+import { setSelectedChatAction} from "../redux/actions"
+import { newSocket } from "../pages/HomePage"
 
-const SingleChatComponent = (props) => {
-  const { changeChat, chatItem } = props
-  //const selectedChat = useSelector((state) => state.chat.selectedChat)
+const SingleChatComponent = ({
+  profile,
+  setChatSelected,
+  changeChat,
+  chatItem,
+}) => {
+
 
   const dispatch = useDispatch()
+  const selectedChat = useSelector( state => state.chat.selectedChat)
+
+  
   return (
     <div
       className='single-profile d-flex px-3 py-2'

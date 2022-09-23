@@ -31,15 +31,11 @@ const LoginPage = () => {
         }),
       }
     )
-
-
-
     if(response.ok){
       let data = await response.json()
     console.log(data.token)
     dispatch(setTokenAction(data.token))
-    //setLogUsers(data)
-  
+    localStorage.setItem("token", data.token)
       navigate("/")
     }
     

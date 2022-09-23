@@ -1,9 +1,9 @@
 /** @format */
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
+import { useSelector } from "react-redux"
 import "../styles/ProfilesContainer.css"
 import SingleProfileContainer from "./SingleProfileContainer"
-import { useSelector } from "react-redux"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
@@ -11,6 +11,8 @@ import SingleChatComponent from "./SingleChatComponent"
 import SingleProfileChat from "./SingleProfileChat"
 
 const ProfilesContainer = (props) => {
+
+  const profiles = useSelector( state => state.profile.profiles)
   const {
     profileNames,
     setChatSelected,
@@ -42,6 +44,8 @@ const ProfilesContainer = (props) => {
     } else {
       setProfile(profileNames)
     }
+
+  
   }
 
   const handleKeyPress = (event) => {
@@ -71,7 +75,7 @@ const ProfilesContainer = (props) => {
       console.log(error)
     }
   }
-  useEffect(() => {}, [profileNames, profile])
+  
   return (
     <>
       <div
@@ -238,7 +242,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='contact-list-container'>
-          {profileNames.map((profile, i) => (
+          {profileNames?.map((profile, i) => (
             <SingleProfileContainer
               key={i}
               profile={profile}
