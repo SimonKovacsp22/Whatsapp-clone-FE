@@ -40,3 +40,17 @@ export const getDataForSpecificChat = async (chatId) => {
 
   return response.data
 }
+export const getUsers = async () => {
+  try {
+    let resp = await fetch(process.env.REACT_APP_BE_URL + "/users")
+    if (resp.ok) {
+      let users = await resp.json()
+
+      return users
+    } else {
+      console.log("error")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

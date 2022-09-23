@@ -1,19 +1,18 @@
 /** @format */
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import "../styles/ProfilesContainer.css"
 import SingleProfileContainer from "./SingleProfileContainer"
+import { useSelector } from "react-redux"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
 import { Link } from "react-router-dom"
 import SingleChatComponent from "./SingleChatComponent"
 import SingleProfileChat from "./SingleProfileChat"
-import { useSelector } from "react-redux"
 
 const ProfilesContainer = (props) => {
   const {
     profileNames,
-    setProfileNames,
     setChatSelected,
     changeChat,
     setSearchTerm,
@@ -24,11 +23,13 @@ const ProfilesContainer = (props) => {
 
   const token = useSelector((state) => state.profile.token)
   const allChatItems = useSelector((state) => state.chat.chats)
+  //const profiles = useSelector((state) => state)
 
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
   const [showList, setShowList] = useState(false)
+  const [profile, setProfile] = useState(profileNames)
 
   const target = useRef(null)
 
@@ -37,8 +38,9 @@ const ProfilesContainer = (props) => {
       const filteredProfiles = profileNames.filter((profile) =>
         profile?.username.toLowerCase().includes(profileName.toLowerCase())
       )
-
-      setProfileNames(filteredProfiles)
+      setProfile(filteredProfiles)
+    } else {
+      setProfile(profileNames)
     }
   }
 
@@ -69,7 +71,7 @@ const ProfilesContainer = (props) => {
       console.log(error)
     }
   }
-
+  useEffect(() => {}, [profileNames, profile])
   return (
     <>
       <div
@@ -141,11 +143,10 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='profiles-container mt-3 style-1'>
-          {allChatItems.map((chatItem, i) => (
+          {allChatItems?.map((chatItem, i) => (
             <SingleChatComponent
               key={i}
               chatItem={chatItem}
-              setChatSelected={setChatSelected}
               changeChat={changeChat}
             />
           ))}
@@ -313,7 +314,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='contact-list-container'>
-          {profileNames.map((profile, i) => (
+          {profile?.map((profile, i) => (
             <SingleProfileChat
               key={i}
               profile={profile}

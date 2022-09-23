@@ -3,15 +3,12 @@
 import React from "react"
 import "../styles/SingleChatComponent.css"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  setSelectedChatAction,
-  setSelectedChatMessagesAction,
-} from "../redux/actions"
+import { setSelectedChatAction } from "../redux/actions"
 
 const SingleChatComponent = (props) => {
-  const { profile, setChatSelected, changeChat, chatItem } = props
-  const selectedChat = useSelector((state) => state.chat.selectedChat)
-  console.log(chatItem)
+  const { changeChat, chatItem } = props
+  //const selectedChat = useSelector((state) => state.chat.selectedChat)
+
   const dispatch = useDispatch()
   return (
     <div
@@ -28,8 +25,8 @@ const SingleChatComponent = (props) => {
         />
       </div>
       <div className='single-pro-center col-8 d-flex text-truncate'>
-        {chatItem.members.map((user) => (
-          <h6 className='mb-0 mt-2 text-truncate'>
+        {chatItem.members.map((user, i) => (
+          <h6 key={i} className='mb-0 mt-2 text-truncate'>
             <span>{user.username + ", "}</span>
           </h6>
         ))}

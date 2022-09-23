@@ -1,7 +1,7 @@
 /** @format */
 
 import profilesReducer from "../reducers/profileReducer"
-import loginUserReducer from "../reducers/loginUserReducer"
+
 import storage from "redux-persist/lib/storage"
 import { persistStore, persistReducer } from "redux-persist"
 import { encryptTransform } from "redux-persist-transform-encrypt"
@@ -23,7 +23,6 @@ const persistConfig = {
 
 const combinedReducer = combineReducers({
   profile: profilesReducer,
-  logUser: loginUserReducer,
   chat: chatReducer,
 })
 

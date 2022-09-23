@@ -1,11 +1,16 @@
 /** @format */
-import { getDataForLoggedInUser, getChats } from "../lib/apiFunctions"
-import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
-import { getAllChatAction, setLoggedInUserAction } from "../redux/actions"
-import "../styles/HomePage.css"
+
+import { useDispatch, useSelector } from "react-redux"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
+import { getDataForLoggedInUser, getChats } from "../lib/apiFunctions"
+import {
+  setLoggedInUserAction,
+  getAllChatAction,
+  setProfilesAction,
+} from "../redux/actions"
+import "../styles/HomePage.css"
 
 const HomePage = () => {
   const token = useSelector((state) => state.profile.token)
@@ -45,13 +50,17 @@ const HomePage = () => {
     getDataForLoggedInUser(token).then((data) =>
       dispatch(setLoggedInUserAction(data))
     )
-    getUsers()
-    getChats(token).then((chats) => dispatch(getAllChatAction(chats)))
+    getUsers().then((users) => dispatch(setProfilesAction(users)))
+    getChats(token).then((chats) => {
+      //setChatItems(chats)
+      dispatch(getAllChatAction(chats))
+    })
   }, [])
   return (
     <div className='main-container d-flex'>
       <ProfilesContainer
         profileNames={profileNames}
+        // chatSelected={chatSelected}
         setProfileNames={setProfileNames}
         setChatSelect={setChatSelected}
         changeChat={changeChat}

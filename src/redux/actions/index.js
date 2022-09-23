@@ -7,6 +7,7 @@ export const SET_TOKEN = "SET_TOKEN"
 export const SET_SELECTED_CHAT_MESSAGES = "SET_SELECTED_CHAT_MESSAGES"
 export const SEND_MESSAGE = "SEND_MESSAGE"
 export const GET_ALL_CHATS = "GET_ALL_CHATS"
+export const SET_PROFILES = "SET_PROFILES"
 
 export const setLoggedInUserAction = (user) => {
   return {
@@ -61,5 +62,11 @@ export const getAllChatAction = (chats) => {
   return {
     type: GET_ALL_CHATS,
     payload: chats,
+  }
+}
+export const setProfilesAction = (profiles) => {
+  return {
+    type: SET_PROFILES,
+    payload: profiles,
   }
 }

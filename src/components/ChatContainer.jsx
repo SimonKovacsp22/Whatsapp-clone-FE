@@ -10,14 +10,20 @@ import {
   sendMessageAction,
   setSelectedChatMessagesAction,
 } from "../redux/actions/index"
-import { getChats, getDataForSpecificChat } from "../lib/apiFunctions"
+import { getDataForSpecificChat } from "../lib/apiFunctions"
+import { v4 as uuidV4 } from "uuid"
+
+const newSocket = io(process.env.REACT_APP_BE_URL, {
+  transports: ["websocket"],
+})
 
 const ChatContainer = () => {
   const dispatch = useDispatch()
 
   const loggedInUser = useSelector((state) => state.profile.loggedInUser)
   const selectedChat = useSelector((state) => state.chat.selectedChat)
-  //console.log(selectedChat)
+  // console.log(loggedInUser._id)
+  // console.log(selectedChat.messages.map((msg) => msg.sender))
 
   const recipients = selectedChat?.members
   const messages = useSelector((state) => state.chat.selectedChatMessages)
@@ -30,34 +36,46 @@ const ChatContainer = () => {
 
   const target = useRef(null)
 
-  const sendMessage = (recipients, text) => {
-    socket.emit("send-message", { recipients, text })
+  const sendMessage = () => {
+    const messageData = {
+      text: messageText,
+      room: selectedChat._id,
+      sender: loggedInUser._id,
+      time:
+        new Date(Date.now()).getHours() +
+        ":" +
+        new Date(Date.now()).getMinutes(),
+    }
+    newSocket.emit("send_message", messageData)
     dispatch(
       sendMessageAction({
-        content: { text: text, media: "" },
-        sender: loggedInUser._id,
+        _id: uuidV4(),
+        sender: messageData.sender,
+        content: { text: messageData.text, media: "" },
       })
     )
   }
-
   useEffect(() => {
-    const newSocket = io(process.env.REACT_APP_BE_URL, {
-      query: { id: loggedInUser?._id, chatId: selectedChat?._id },
-      transports: ["websocket"],
-    })
-    setSocket(newSocket)
-
-    return () => newSocket.close
-  }, [loggedInUser, selectedChat])
-
-  useEffect(() => {
-    if (selectedChat?._id)
-      getDataForSpecificChat(selectedChat?._id).then((chat) =>
-        dispatch(setSelectedChatMessagesAction(chat.messages))
+    if (selectedChat?._id) {
+      getDataForSpecificChat(selectedChat._id).then((data) =>
+        dispatch(setSelectedChatMessagesAction(data.messages))
       )
+      newSocket.emit("join_room", selectedChat._id)
+    }
+  }, [selectedChat])
 
-    // socket.on('receive-message', dispatch(addMessageToChatAction({text: messageText, sender: })))
-  }, [selectedChat?._id])
+  useEffect(() => {
+    newSocket.on("receive_message", (receivedMessage) => {
+      console.log(receivedMessage)
+      dispatch(
+        sendMessageAction({
+          _id: uuidV4(),
+          sender: receivedMessage.sender,
+          content: { text: receivedMessage.text, media: "" },
+        })
+      )
+    })
+  }, [])
   return (
     <>
       <div
@@ -137,7 +155,12 @@ const ChatContainer = () => {
           <div>
             {messages?.map((message, idx) => (
               <div className='chat-content-item' key={idx}>
-                {message.content.text}
+                {loggedInUser._id ===
+                selectedChat.messages.map((msg) => msg.sender) ? (
+                  <div className='bg-danger'>{message.content.text}</div>
+                ) : (
+                  <div className='bg-warning'>{message.content.text}</div>
+                )}
               </div>
             ))}
           </div>
@@ -162,10 +185,7 @@ const ChatContainer = () => {
               className='w-100'
               onSubmit={(e) => {
                 e.preventDefault()
-                sendMessage(
-                  recipients.map((r, i) => r._id),
-                  messageText
-                )
+                sendMessage()
               }}>
               <input
                 type='text'
