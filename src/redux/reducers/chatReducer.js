@@ -5,6 +5,7 @@ import {
   SET_SELECTED_CHAT_MESSAGES,
   SEND_MESSAGE,
   GET_ALL_CHATS,
+  ADD_NEW_CHAT
 } from "../actions/index"
 const initialState = {
   chats: [],
@@ -37,6 +38,12 @@ const chatReducer = (state = initialState, action) => {
       return {
         ...state,
         chats: action.payload,
+      }
+    }
+
+    case ADD_NEW_CHAT: {
+      return {
+        ...state, chats:[...state.chats, action.payload]
       }
     }
     default:

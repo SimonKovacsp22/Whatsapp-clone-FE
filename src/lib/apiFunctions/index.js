@@ -47,6 +47,7 @@ export const getUsers = async () => {
       let users = await resp.json()
 
       return users
+      
     } else {
       console.log("error")
     }

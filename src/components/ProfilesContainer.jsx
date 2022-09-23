@@ -1,7 +1,9 @@
 /** @format */
 
-import React, { useState, useRef } from "react"
-import { useSelector } from "react-redux"
+import React, { useState, useRef, useEffect } from "react"
+import { useSelector,useDispatch } from "react-redux"
+import { getUsers } from "../lib/apiFunctions"
+import { addNewChatAction, setProfilesAction } from "../redux/actions"
 import "../styles/ProfilesContainer.css"
 import SingleProfileContainer from "./SingleProfileContainer"
 import ListGroup from "react-bootstrap/ListGroup"
@@ -12,9 +14,19 @@ import SingleProfileChat from "./SingleProfileChat"
 
 const ProfilesContainer = (props) => {
 
-  const profiles = useSelector( state => state.profile.profiles)
+const dispatch = useDispatch()
+
+  useEffect(()=>{
+
+    getUsers().then((users) => {
+      dispatch(setProfilesAction(users))
+      setProfiles(users)
+      setDisplayedProfiles(users)
+    })
+  },[])
+
+  
   const {
-    profileNames,
     setChatSelected,
     changeChat,
     setSearchTerm,
@@ -23,26 +35,28 @@ const ProfilesContainer = (props) => {
     createGroup,
   } = props
 
-  const token = useSelector((state) => state.profile.token)
+  const token = localStorage.getItem("token")
   const allChatItems = useSelector((state) => state.chat.chats)
-  //const profiles = useSelector((state) => state)
+  
+  
 
   const [show, setShow] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
   const [showList, setShowList] = useState(false)
-  const [profile, setProfile] = useState(profileNames)
+  const [profiles, setProfiles] = useState([])
+  const [displayedProfiles, setDisplayedProfiles] = useState([])
 
   const target = useRef(null)
 
   const handleSearch = (profileName) => {
-    if (profileName.length > 3) {
-      const filteredProfiles = profileNames.filter((profile) =>
+    if (profileName.length > 2) {
+      const filteredProfiles = profiles.filter((profile) =>
         profile?.username.toLowerCase().includes(profileName.toLowerCase())
       )
-      setProfile(filteredProfiles)
+      setDisplayedProfiles(filteredProfiles)
     } else {
-      setProfile(profileNames)
+      setDisplayedProfiles(profiles)
     }
 
   
@@ -67,7 +81,10 @@ const ProfilesContainer = (props) => {
       })
       if (resp.ok) {
         let chat = await resp.json()
-        //console.log(chat)
+        console.log(chat)
+
+        dispatch(addNewChatAction(chat))
+        
       } else {
         console.log("error")
       }
@@ -242,7 +259,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='contact-list-container'>
-          {profileNames?.map((profile, i) => (
+          {displayedProfiles?.map((profile, i) => (
             <SingleProfileContainer
               key={i}
               profile={profile}
@@ -318,7 +335,7 @@ const ProfilesContainer = (props) => {
           </div>
         </div>
         <div className='contact-list-container'>
-          {profile?.map((profile, i) => (
+          {displayedProfiles?.map((profile, i) => (
             <SingleProfileChat
               key={i}
               profile={profile}

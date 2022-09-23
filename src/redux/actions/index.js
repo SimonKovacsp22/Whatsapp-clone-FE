@@ -8,6 +8,7 @@ export const SET_SELECTED_CHAT_MESSAGES = "SET_SELECTED_CHAT_MESSAGES"
 export const SEND_MESSAGE = "SEND_MESSAGE"
 export const GET_ALL_CHATS = "GET_ALL_CHATS"
 export const SET_PROFILES = "SET_PROFILES"
+export const ADD_NEW_CHAT = "ADD_NEW_CHAT"
 
 export const setLoggedInUserAction = (user) => {
   return {
@@ -68,6 +69,13 @@ export const setProfilesAction = (profiles) => {
   return {
     type: SET_PROFILES,
     payload: profiles,
+  }
+}
+
+export const addNewChatAction = (chat) => {
+  return {
+    type:ADD_NEW_CHAT,
+    payload:chat
   }
 }
 

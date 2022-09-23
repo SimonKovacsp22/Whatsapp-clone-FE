@@ -1,6 +1,6 @@
 /** @format */
 import io from "socket.io-client"
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect,useCallback } from "react"
 import "../styles/ChatContainer.css"
 import ListGroup from "react-bootstrap/ListGroup"
 import Overlay from "react-bootstrap/Overlay"
@@ -29,9 +29,16 @@ const ChatContainer = () => {
   const [messageText, setMessageText] = useState("")
 
   const target = useRef(null)
+  const lastMessageRef = useCallback(node => {
+    if (node) {
+      node.scrollIntoView({ smooth: true })
+    }
+  }, [])
 
   const sendMessage =  () => {
-
+  if(!messageText){
+    return
+  }
     const messageData = {
       text: messageText,
       room: selectedChat._id,
@@ -42,6 +49,7 @@ const ChatContainer = () => {
     }
      newSocket.emit('send_message', messageData)
      dispatch(sendMessageAction({_id: uuidV4() ,sender: messageData.sender, content: { text: messageData.text,media: "" }})) 
+     setMessageText("")
      
   }
   useEffect(() => {
@@ -149,8 +157,10 @@ const ChatContainer = () => {
         </div>
         <div className='chat-content'>
           <div>
-            {messages?.map((message) => (
-              <div className='chat-content-item' key={message._id}>
+            {messages?.map((message) => {
+              const lastMessage = messages[messages.length - 1]._id === message._id
+              return(
+              <div ref={lastMessage ? lastMessageRef: null} className='chat-content-item' key={message._id}>
                 {loggedInUser._id ===
                 selectedChat.messages.map((msg) => msg.sender) ? (
                   <div className='bg-danger'>{message.content.text}</div>
@@ -158,7 +168,7 @@ const ChatContainer = () => {
                   <div className='bg-warning'>{message.content.text}</div>
                 )}
               </div>
-            ))}
+)})}
           </div>
         </div>
         <div className='chat-input-container d-flex align-items-center justify-content-between'>
