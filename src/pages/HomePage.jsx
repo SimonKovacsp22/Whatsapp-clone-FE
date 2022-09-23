@@ -1,15 +1,16 @@
 /** @format */
-import { getDataForLoggedInUser,getChats, getUsers,getAllChatAction } from "../lib/apiFunctions"
+import { getDataForLoggedInUser, getChats } from "../lib/apiFunctions"
 
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import React, { useEffect, useState } from "react"
-import { setLoggedInUserAction, setSelectedChatAction, setProfilesAction } from "../redux/actions"
+import {
+  setLoggedInUserAction,
+  setProfilesAction,
+  getAllChatAction,
+} from "../redux/actions"
 import "../styles/HomePage.css"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
-
-
-
 
 const HomePage = () => {
   const token = localStorage.getItem("token")
