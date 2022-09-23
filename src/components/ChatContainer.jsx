@@ -77,10 +77,10 @@ const ChatContainer = () => {
               alt='chat-container-profile-pic'
               className='chat-container-profile-pic'
             />
-            <h6 className='mx-3 mb-0'>
-              {loggedInUser && loggedInUser.username
-                ? loggedInUser.username
-                : ""}
+            <h6 className='mx-3 mb-0 text-truncate'>
+              {selectedChat?.members?.map((member) => (
+                <span key={member._id}>{member?.username + " , "}</span>
+              ))}
             </h6>
           </div>
           <div className='chat-container-nav col-6 d-flex align-items-center justify-content-end'>
@@ -134,17 +134,11 @@ const ChatContainer = () => {
           </div>
         </div>
         <div className='chat-content'>
-          {selectedChat?.members?.map((member) => (
-            <span key={member._id}>{member?.username + ", "}</span>
-          ))}
-
           <div>
             {messages?.map((message, idx) => (
-              <p
-                key={idx}
-                style={{ backgroudColor: "black", background: "black" }}>
+              <div className='chat-content-item' key={idx}>
                 {message.content.text}
-              </p>
+              </div>
             ))}
           </div>
         </div>

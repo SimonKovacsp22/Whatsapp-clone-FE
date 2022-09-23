@@ -31,14 +31,13 @@ const ProfilesContainer = (props) => {
   const [showList, setShowList] = useState(false)
 
   const target = useRef(null)
-  console.log(createGroup)
 
   const handleSearch = (profileName) => {
     if (profileName.length > 3) {
       const filteredProfiles = profileNames.filter((profile) =>
         profile?.username.toLowerCase().includes(profileName.toLowerCase())
       )
-      console.log(filteredProfiles)
+
       setProfileNames(filteredProfiles)
     }
   }
@@ -62,7 +61,7 @@ const ProfilesContainer = (props) => {
       })
       if (resp.ok) {
         let chat = await resp.json()
-        console.log(chat)
+        //console.log(chat)
       } else {
         console.log("error")
       }
@@ -275,7 +274,6 @@ const ProfilesContainer = (props) => {
                     onClick={() => {
                       console.log(user)
                       createGroup.splice(createGroup.indexOf(user), 1)
-
                       setCreateGroup([...createGroup])
                     }}></i>
                 </span>

@@ -2,27 +2,23 @@
 
 import React from "react"
 import "../styles/SingleChatComponent.css"
-import { useDispatch } from "react-redux"
-import { setSelectedChatAction, setSelectedChatMessagesAction } from "../redux/actions"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  setSelectedChatAction,
+  setSelectedChatMessagesAction,
+} from "../redux/actions"
 
-const SingleChatComponent = ({
-  profile,
-  setChatSelected,
-  changeChat,
-  chatItem,
-}) => {
+const SingleChatComponent = (props) => {
+  const { profile, setChatSelected, changeChat, chatItem } = props
+  const selectedChat = useSelector((state) => state.chat.selectedChat)
+  console.log(chatItem)
   const dispatch = useDispatch()
   return (
     <div
-      className={
-        setChatSelected?._id === chatItem._id
-          ? "single-profile d-flex px-3 py-2"
-          : "single-profile d-flex px-3 py-2 border-thick"
-      }
+      className='single-profile d-flex px-3 py-2'
       onClick={() => {
         changeChat(chatItem)
         dispatch(setSelectedChatAction(chatItem))
-        
       }}>
       <div className='single-pro-picture col-2 d-flex align-items-center'>
         <img
@@ -31,9 +27,12 @@ const SingleChatComponent = ({
           className='single-profile-pic'
         />
       </div>
-      <div className='single-pro-center col-8'>
-        <h6 className='mb-0 mt-2'>{chatItem._id}</h6>
-        <p className='mb-0 text-truncate text-secondary'>Hi how are u?</p>
+      <div className='single-pro-center col-8 d-flex text-truncate'>
+        {chatItem.members.map((user) => (
+          <h6 className='mb-0 mt-2 text-truncate'>
+            <span>{user.username + ", "}</span>
+          </h6>
+        ))}
       </div>
       <div className='time-container col-2'>
         <small className='text-secondary'>yesterday</small>
