@@ -2,8 +2,9 @@
 
 import React from "react"
 import "../styles/SingleChatComponent.css"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setSelectedChatAction} from "../redux/actions"
+import { newSocket } from "../pages/HomePage"
 
 const SingleChatComponent = ({
   profile,
@@ -14,6 +15,7 @@ const SingleChatComponent = ({
 
 
   const dispatch = useDispatch()
+  const selectedChat = useSelector( state => state.chat.selectedChat)
 
   
   return (
@@ -26,6 +28,7 @@ const SingleChatComponent = ({
       onClick={() => {
         changeChat(chatItem)
         dispatch(setSelectedChatAction(chatItem))
+        
         
       }}>
       <div className='single-pro-picture col-2 d-flex align-items-center'>

@@ -1,5 +1,6 @@
 /** @format */
 import { getDataForLoggedInUser,getChats, getUsers } from "../lib/apiFunctions"
+
 import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
 import { setLoggedInUserAction, setSelectedChatAction, setProfilesAction } from "../redux/actions"
@@ -7,8 +8,10 @@ import "../styles/HomePage.css"
 import ProfilesContainer from "../components/ProfilesContainer"
 import ChatContainer from "../components/ChatContainer"
 
+
+
 const HomePage = () => {
-  const token = useSelector((state) => state.profile.token)
+  const token = localStorage.getItem("token")
 
   const dispatch = useDispatch()
 
@@ -24,7 +27,7 @@ const HomePage = () => {
     getUsers().then( users => dispatch(setProfilesAction(users)))
     getChats(token).then( chats => {
       setChatItems(chats)
-      // dispatch(setSelectedChatAction(chats[0]))
+       dispatch(setSelectedChatAction(chats[0]))
     } )
     
   }, [])

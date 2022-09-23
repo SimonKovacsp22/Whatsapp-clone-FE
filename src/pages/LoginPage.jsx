@@ -35,6 +35,7 @@ const LoginPage = () => {
       let data = await response.json()
     console.log(data.token)
     dispatch(setTokenAction(data.token))
+    localStorage.setItem("token", data.token)
       navigate("/")
     }
     

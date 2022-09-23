@@ -10,10 +10,10 @@ import {sendMessageAction,setSelectedChatMessagesAction} from "../redux/actions/
 import { getDataForSpecificChat } from '../lib/apiFunctions'
 import { v4 as uuidV4 } from "uuid"
 
-
 const newSocket = io(process.env.REACT_APP_BE_URL, {
   transports: ["websocket"],
 })
+
 
 const ChatContainer = () => {
 
@@ -48,20 +48,22 @@ const ChatContainer = () => {
   }
 
   useEffect(()=>{
-    if(selectedChat?._id){getDataForSpecificChat(selectedChat._id).then(data => dispatch(setSelectedChatMessagesAction(data.messages)))
-    newSocket.emit("join_room", selectedChat._id);}
+    if(selectedChat?._id){getDataForSpecificChat(selectedChat._id).then(data => dispatch(setSelectedChatMessagesAction(data.messages)))}
+    newSocket.emit("join_room", selectedChat?._id)
     
-  },[selectedChat])
+  },[selectedChat, newSocket])
 
-   useEffect(()=>{
+  useEffect(()=>{
     newSocket.on("receive_message", (receivedMessage) => {
-     console.log(receivedMessage)
-     dispatch(sendMessageAction({_id: uuidV4() ,sender:receivedMessage.sender, content: { text:receivedMessage.text,media: "" }})) 
-    })
-      
+      console.log(selectedChat._id, receivedMessage.room)
      
+     if(selectedChat._id === receivedMessage.room){
+      dispatch(sendMessageAction({_id: uuidV4() ,sender:receivedMessage.sender, content: { text:receivedMessage.text,media: "" }})) }
+     
+    })
+  },[])
 
-   },[])
+   
 
 
   return (
